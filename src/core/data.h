@@ -20,6 +20,10 @@ public:
     int score;
     int mode;
     int difficulty;
+    int curIndex;
+    QList<int> wordsIndexList;
+    int curIndexAdvanced;
+    QList<int> wordsIndexListAdvanced;
 
     void addScore(const int &scoreToAdd = 1);
 
@@ -36,6 +40,8 @@ public:
     void load();
 
     void reset();
+
+    void resetShuffleFlag();
 
 private:
     // 私有化构造函数

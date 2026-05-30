@@ -15,8 +15,10 @@ Data& Data::getInstance() {
     return instance;
 }
 
-Data::Data() : level(1), lastLevel(1), score(0), mode(1), difficulty(1) {
+Data::Data() : level(1), lastLevel(1), score(0), mode(1), difficulty(1), curIndex(-1), curIndexAdvanced(-1) {
     settings = new QSettings(dataPath, QSettings::IniFormat);
+    wordsIndexList.clear();
+    wordsIndexListAdvanced.clear();
 }
 
 Data::~Data() {
@@ -109,6 +111,22 @@ void Data::save() const {
     settings->setValue("score", score);
     settings->setValue("mode", mode);
     settings->setValue("difficulty", difficulty);
+    settings->setValue("curIndex", curIndex);
+    settings->setValue("curIndexAdvanced", curIndexAdvanced);
+
+    QVariantList varList;
+    for (const int wordIndex : wordsIndexList) {
+        varList.append(wordIndex);
+    }
+
+    settings->setValue("wordsIndexList", varList);
+
+    varList.clear();
+    for (const int wordIndex : wordsIndexListAdvanced) {
+        varList.append(wordIndex);
+    }
+
+    settings->setValue("wordsIndexListAdvanced", varList);
 }
 
 // 加载数据
@@ -123,13 +141,37 @@ void Data::load() {
     mode = settings->value("mode", 1).toInt();
     difficulty = settings->value("difficulty", 1).toInt();
 
+    curIndex = settings->value("curIndex", -1).toInt();
+    curIndexAdvanced = settings->value("curIndexAdvanced", -1).toInt();
+
+    QVariantList varList = settings->value("wordsIndexList").toList();
+    wordsIndexList.clear();
+    for (const QVariant &var : varList) {
+        wordsIndexList.append(var.toInt());
+    }
+
+    varList = settings->value("wordsIndexListAdvanced", varList).toList();
+    wordsIndexListAdvanced.clear();
+    for (const QVariant &var : varList) {
+        wordsIndexListAdvanced.append(var.toInt());
+    }
+
     // 一致性检查
     for (int i = 1; i <= 5; i++) {
         if (level == i && score >= expLevels[i]) level = i + 1;
     }
 }
 
-// 重置数据
+void Data::resetShuffleFlag() {
+    curIndex = -1;
+    curIndexAdvanced = -1;
+    wordsIndexList.clear();
+    wordsIndexListAdvanced.clear();
+
+    save();
+}
+
+// 重置所有数据
 void Data::reset() {
     level = 1;
     lastLevel = 1;
@@ -137,5 +179,5 @@ void Data::reset() {
     mode = 1;
     difficulty = 1;
 
-    save();
+    resetShuffleFlag();
 }

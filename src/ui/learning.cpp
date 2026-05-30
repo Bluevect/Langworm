@@ -6,7 +6,7 @@
 #include "../core/dictionary.h"
 
 LearningWidget::LearningWidget(QWidget *parent)
-    : QWidget{parent}, curIndex{-1}, data{Data::getInstance()} {
+    : QWidget{parent}, data{Data::getInstance()} {
     // 使背景样式生效
     setAttribute(Qt::WA_StyledBackground, true);
 
@@ -70,6 +70,11 @@ LearningWidget::LearningWidget(QWidget *parent)
 
     // 返回按钮部分
     returnLayout = new QHBoxLayout;
+
+    progressLabel = new QLabel("进度: -1 / -1", this);
+    progressLabel->setObjectName("subTitleLabel");
+    returnLayout->addWidget(progressLabel);
+
     returnLayout->addStretch(1);
 
     returnBtn = new QPushButton("返回");
@@ -81,6 +86,9 @@ LearningWidget::LearningWidget(QWidget *parent)
 }
 
 void LearningWidget::onOptionClicked() {
+    // 根据模式使用词典
+    const Dictionary &dict = DictionaryManager::getInstance().getDictByMode(data.difficulty);
+
     // 动态根据按钮的文字判断答案是否正确
     const QPushButton *btn = qobject_cast<QPushButton *>(sender());
     if (!btn) return;
@@ -88,6 +96,15 @@ void LearningWidget::onOptionClicked() {
     if (btn->text() == curMeaning) {
         // 回答正确
         data.addScore(data.difficulty);
+
+        // 更新 curIndex
+        data.curIndex++;
+
+        // 如果单词遍历结束，则下次遍历时重新初始化
+        if (data.curIndex >= dict.size()) {
+            data.curIndex = -1;
+        }
+
         updateWords();
         updateRendering();
     } else {
@@ -136,27 +153,10 @@ void LearningWidget::updateWords() {
         qFatal("Dictionary is empty. Aborted.");
     }
 
-    // 将正确单词索引列表随机打乱，确保每一个单词都有出现的机会
-    // curIndex 初始值为 -1，若为 -1 则重新打乱 wordsIndexList
-    // 这里不选择直接打乱 wordsList 是因为混合模式下字典是随机的，但两个字典的长度一致
-    if (curIndex == -1) {
-        // 初始化 wordsIndexList
-        wordsIndexList.clear();
+    tryShuffle();
 
-        for (int i = 0; i < dict.size(); i++) {
-            wordsIndexList.append(i);
-        }
-
-        // 使用标准库的 shuffle 函数进行打乱
-        // 使用 Qt 内置的 QRandomGenerator 实现随机数生成
-        std::shuffle(wordsIndexList.begin(), wordsIndexList.end(), *QRandomGenerator::global());
-
-        // 打乱结束令 curIndex = 0，从第一个单词开始遍历
-        curIndex = 0;
-    }
-
-    curWord = wordsList[wordsIndexList[curIndex]];
-    curMeaning = meaningsList[wordsIndexList[curIndex]];
+    curWord = wordsList[data.wordsIndexList[data.curIndex]];
+    curMeaning = meaningsList[data.wordsIndexList[data.curIndex]];
 
     optsList.append(curMeaning);
 
@@ -172,25 +172,40 @@ void LearningWidget::updateWords() {
     }
 
     std::shuffle(optsList.begin(), optsList.end(), *QRandomGenerator::global());
+}
 
-    // 更新 curIndex
-    curIndex++;
+void LearningWidget::tryShuffle() const {
+    // 根据模式使用词典
+    const Dictionary &dict = DictionaryManager::getInstance().getDictByMode(data.difficulty);
 
-    // 如果单词遍历结束，则下次遍历时重新初始化
-    if (curIndex >= dict.size()) {
-        curIndex = -1;
+    // 将正确单词索引列表随机打乱，确保每一个单词都有出现的机会
+    // curIndex 初始值为 -1，若为 -1 则重新打乱 wordsIndexList
+    // 这里不选择直接打乱 wordsList 是因为混合模式下字典是随机的，但两个字典的长度一致
+    if (data.curIndex == -1) {
+        // 初始化 wordsIndexList
+        data.wordsIndexList.clear();
+
+        for (int i = 0; i < dict.size(); i++) {
+            data.wordsIndexList.append(i);
+        }
+
+        // 使用标准库的 shuffle 函数进行打乱
+        // 使用 Qt 内置的 QRandomGenerator 实现随机数生成
+        std::shuffle(data.wordsIndexList.begin(), data.wordsIndexList.end(), *QRandomGenerator::global());
+
+        // 打乱结束令 curIndex = 0，从第一个单词开始遍历
+        data.curIndex = 0;
     }
 }
 
-void LearningWidget::resetShuffleFlag() {
-    curIndex = -1;
-}
-
 void LearningWidget::updateRendering() const {
+    const Dictionary &dict = DictionaryManager::getInstance().getDictByMode(data.difficulty);
+
     // 更新渲染
     scoreLabel->setText(QString("Exp: %1 / %2").arg(data.score).arg(data.getExpForNextLevel()));
     levelLabel->setText(QString("等级: %1").arg(data.level));
     titleLabel->setText(curWord);
+    progressLabel->setText(QString("进度: %1 / %2").arg(data.curIndex + 1).arg(dict.size()));
 
     optBtn1->setText(optsList[0]);
     optBtn2->setText(optsList[1]);

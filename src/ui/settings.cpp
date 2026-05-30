@@ -137,6 +137,7 @@ SettingsWidget::SettingsWidget(QWidget *parent)
         }
 
         DictionaryManager::getInstance().loadFromJson(targetPath);
+        Data::getInstance().resetShuffleFlag();
         updateRendering();
     });
 

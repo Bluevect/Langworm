@@ -20,7 +20,7 @@ public:
 
     void updateRendering() const;
 
-    void resetShuffleFlag();
+    void tryShuffle() const;
 
     signals:
         void returnBtnClicked();
@@ -40,12 +40,13 @@ private:
     QPushButton *optBtn3;
     QPushButton *optBtn4;
     QHBoxLayout *returnLayout;
+    QLabel *progressLabel;
     QPushButton *returnBtn;
 
-    int curIndex;
+    // int curIndex;
     QString curWord;
     QString curMeaning;
-    QList<int> wordsIndexList;
+    // QList<int> wordsIndexList;
     QList<QString> wordsList;
     QList<QString> meaningsList;
     QList<QString> optsList;

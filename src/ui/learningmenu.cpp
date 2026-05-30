@@ -82,6 +82,8 @@ void LearningMenuWidget::adjustDifficulty() {
     if (data.difficulty > data.level || data.difficulty > 6)
         data.difficulty = 1;
 
+    data.save();
+
     if (data.level == 1) {
         QMessageBox::warning(
             this,
@@ -99,6 +101,8 @@ void LearningMenuWidget::adjustMode() const {
 
     if (data.mode > 3)
         data.mode = 1;
+
+    data.save();
 
     modeLabel->setText(QString("模式: %1").arg(data.getModeStr()));
 }

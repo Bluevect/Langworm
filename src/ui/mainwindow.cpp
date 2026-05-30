@@ -76,12 +76,10 @@ void MainWindow::onLearnBtnClicked() const {
     const Data &data = Data::getInstance();
 
     if (data.difficulty >= 4 && data.difficulty <= 6) {
-        learningAdvanced->resetShuffleFlag();
         stack->setCurrentWidget(learningAdvanced);
         learningAdvanced->updateWords();
         learningAdvanced->updateRendering();
     } else {
-        learning->resetShuffleFlag();
         stack->setCurrentWidget(learning);
         learning->updateWords();
         learning->updateRendering();
