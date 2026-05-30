@@ -22,8 +22,8 @@ public:
 
     void tryShuffle() const;
 
-    signals:
-        void returnBtnClicked();
+signals:
+    void returnBtnClicked();
 
 private:
     QVBoxLayout *mainLayout;
@@ -43,7 +43,7 @@ private:
     QList<QString> wordsList;
     QList<QString> meaningsList;
 
-    Data& data;
+    Data &data;
 };
 
 #endif // LEARNINGADVANCED_H

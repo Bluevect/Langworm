@@ -18,13 +18,13 @@ public:
 
     void updateRendering() const;
 
-    signals:
+signals:
     void returnBtnClicked();
 
     void learnBtnClicked();
 
 public
-    slots:
+slots:
     void adjustDifficulty();
 
     void adjustMode() const;

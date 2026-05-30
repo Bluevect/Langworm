@@ -4,7 +4,7 @@
 #include <QJsonObject>
 #include <QRandomGenerator>
 
-QPair<QList<QString>, QList<QString>> Dictionary::getListByMode(const int &mode) const {
+QPair<QList<QString>, QList<QString> > Dictionary::getListByMode(const int &mode) const {
     switch (mode) {
         case 1:
             return {enList, cnList};
@@ -33,7 +33,7 @@ void Dictionary::reset() {
     cnList.clear();
 }
 
-DictionaryManager& DictionaryManager::getInstance() {
+DictionaryManager &DictionaryManager::getInstance() {
     static DictionaryManager instance;
     return instance;
 }

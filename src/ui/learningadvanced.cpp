@@ -145,7 +145,7 @@ void LearningAdvancedWidget::updateWords() {
     const int d = data.difficulty - 1;
 
     // 更新私有变量
-    QPair<QList<QString>, QList<QString>> listPair = dict.getListByMode(data.mode);
+    QPair<QList<QString>, QList<QString> > listPair = dict.getListByMode(data.mode);
     wordsList = listPair.first;
     meaningsList = listPair.second;
 
@@ -196,7 +196,6 @@ void LearningAdvancedWidget::updateRendering() const {
     levelLabel->setText(QString("等级: %1").arg(data.level));
     titleLabel->setText(curWord);
     progressLabel->setText(QString("进度: %1 / %2").arg(data.curIndex[d] + 1).arg(dict.size()));
-
 }
 
 LearningAdvancedWidget::~LearningAdvancedWidget() = default;

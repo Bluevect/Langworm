@@ -6,13 +6,16 @@
 class Dictionary {
 public:
     Dictionary() = default;
+
     ~Dictionary() = default;
 
     QList<QString> enList;
     QList<QString> cnList;
 
-    QPair<QList<QString>, QList<QString>> getListByMode(const int &mode) const;
+    QPair<QList<QString>, QList<QString> > getListByMode(const int &mode) const;
+
     qsizetype size() const;
+
     void reset();
 };
 
@@ -20,11 +23,12 @@ public:
 class DictionaryManager {
 public:
     // 删除拷贝构造和赋值操作
-    DictionaryManager(const DictionaryManager&) = delete;
-    DictionaryManager& operator=(const DictionaryManager&) = delete;
+    DictionaryManager(const DictionaryManager &) = delete;
+
+    DictionaryManager &operator=(const DictionaryManager &) = delete;
 
     // 静态获取实例的接口
-    static DictionaryManager& getInstance();
+    static DictionaryManager &getInstance();
 
     static const QString dictPath;
 
@@ -37,6 +41,7 @@ public:
 private:
     // 私有化构造函数
     DictionaryManager() = default;
+
     ~DictionaryManager() = default;
 
     Dictionary dictLevel1;

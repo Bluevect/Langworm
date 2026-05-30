@@ -22,10 +22,11 @@ public:
 
     void tryShuffle() const;
 
-    signals:
-        void returnBtnClicked();
+signals:
+    void returnBtnClicked();
 
-public slots:
+public
+slots:
     void onOptionClicked();
 
 private:
@@ -49,7 +50,7 @@ private:
     QList<QString> meaningsList;
     QList<QString> optsList;
 
-    Data& data;
+    Data &data;
 };
 
 #endif // LEARNING_H

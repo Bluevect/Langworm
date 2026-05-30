@@ -1,7 +1,6 @@
 #include "data.h"
 
 #include <QFile>
-#include <QRandomGenerator>
 
 // 匿名命名空间，确保 expLevels 仅在 data.cpp 内部使用
 namespace {
@@ -11,7 +10,7 @@ namespace {
 
 const QString Data::dataPath = "./config/data.ini";
 
-Data& Data::getInstance() {
+Data &Data::getInstance() {
     static Data instance;
     return instance;
 }
@@ -119,7 +118,7 @@ void Data::save() const {
         settings->setValue(QString("curIndex%1").arg(i), curIndex[i]);
 
         QVariantList varList;
-        for (const int wordIndex : wordsIndexList[i]) {
+        for (const int wordIndex: wordsIndexList[i]) {
             varList.append(wordIndex);
         }
 
@@ -144,7 +143,7 @@ void Data::load() {
 
         QVariantList varList = settings->value(QString("wordsIndexList%1").arg(i)).toList();
         wordsIndexList[i].clear();
-        for (const QVariant &var : varList) {
+        for (const QVariant &var: varList) {
             wordsIndexList[i].append(var.toInt());
         }
     }

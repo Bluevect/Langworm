@@ -14,8 +14,9 @@ public:
 
     ~MenuWidget() override;
 
-    signals:
+signals:
     void startBtnClicked();
+
     void settingsBtnClicked();
 
 private:

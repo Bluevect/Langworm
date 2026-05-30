@@ -63,7 +63,7 @@ SettingsWidget::SettingsWidget(QWidget *parent)
             "导出字典",
             QString("./%1.json").arg(dictName),
             "Json 文件 (*.json)"
-            );
+        );
 
         if (targetPath.isEmpty()) {
             // 用户取消
@@ -82,7 +82,7 @@ SettingsWidget::SettingsWidget(QWidget *parent)
                 "文件已存在",
                 "目标路径下存在同名文件，是否覆盖？",
                 QMessageBox::StandardButtons(QMessageBox::Yes | QMessageBox::No)
-                );
+            );
 
             // 用户选择否，不覆盖文件
             if (result == QMessageBox::No) {
@@ -112,7 +112,7 @@ SettingsWidget::SettingsWidget(QWidget *parent)
             "选择词典文件",
             QString(),
             "Json 文件 (*.json)"
-                );
+        );
 
         if (sourcePath.isEmpty()) {
             // 用户取消
@@ -148,17 +148,17 @@ SettingsWidget::SettingsWidget(QWidget *parent)
             "重置数据",
             "你确定要重置所有数据吗？",
             QMessageBox::StandardButtons(QMessageBox::Yes | QMessageBox::No)
-            );
+        );
 
         if (result == QMessageBox::Yes) {
             // 调用 Data 类中的 reset
             Data::getInstance().reset();
 
             QMessageBox::information(
-            this,
-            "重置数据",
-            "重置成功！",
-            QMessageBox::Ok
+                this,
+                "重置数据",
+                "重置成功！",
+                QMessageBox::Ok
             );
         }
     });

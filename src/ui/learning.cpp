@@ -147,7 +147,7 @@ void LearningWidget::updateWords() {
     optsList.clear();
     meaningsList.clear();
 
-    QPair<QList<QString>, QList<QString>> listPair = dict.getListByMode(data.mode);
+    QPair<QList<QString>, QList<QString> > listPair = dict.getListByMode(data.mode);
 
     wordsList = listPair.first;
     meaningsList = listPair.second;

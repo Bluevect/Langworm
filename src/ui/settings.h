@@ -16,7 +16,7 @@ public:
 
     void updateRendering() const;
 
-    signals:
+signals:
     void returnBtnClicked();
 
 private:
