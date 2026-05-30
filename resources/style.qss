@@ -1,0 +1,79 @@
+/* style.qss */
+MenuWidget#menu, SettingsWidget#settings, LearningWidget#learning,
+LearningMenuWidget#learningMenu, LearningAdvancedWidget#learningAdvanced {
+    background-color: #B0E2FF;
+    background-image: url(:/bg.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+QLabel#titleLabel {
+    font-size: 48px;
+    font-weight: bold;
+    color: #EEEEEE;
+    background: transparent;
+}
+
+QLabel#subTitleLabel {
+    font-size: 18px;
+    font-weight: bold;
+    color: #EEEEEE;
+    background: transparent;
+}
+
+QLabel#scoreLabel {
+    font-size: 20px;
+    font-weight: bold;
+    color: #EEEEEE;
+    background: transparent;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+QLineEdit#inputEdit {
+    padding: 8px 10px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+QPushButton {
+    background-color: #4A6A8A;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 9px 32px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+QPushButton:hover {
+    background-color: #6A8AAA;
+}
+
+QPushButton:pressed {
+    background-color: #2A4A6A;
+}
+
+QMessageBox {
+    background-color: #EEEEEE;
+}
+
+QMessageBox QLabel {
+    color: #112211;
+    font-size: 14px;
+}
+
+QMessageBox QPushButton {
+    background-color: #4A6A8A;
+    color: white;
+    border-radius: 4px;
+    padding: 5px 15px;
+}
+
+QMessageBox QPushButton:hover {
+    background-color: #6A8AAA;
+}
+
+QMessageBox QPushButton:pressed {
+    background-color: #2A4A6A;
+}
