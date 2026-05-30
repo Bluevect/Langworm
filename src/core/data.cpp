@@ -1,6 +1,7 @@
 #include "data.h"
 
 #include <QFile>
+#include <QRandomGenerator>
 
 // 匿名命名空间，确保 expLevels 仅在 data.cpp 内部使用
 namespace {
@@ -15,10 +16,12 @@ Data& Data::getInstance() {
     return instance;
 }
 
-Data::Data() : level(1), lastLevel(1), score(0), mode(1), difficulty(1), curIndex(-1), curIndexAdvanced(-1) {
+Data::Data() : level(1), lastLevel(1), score(0), mode(1), difficulty(1), curIndex{-1} {
     settings = new QSettings(dataPath, QSettings::IniFormat);
-    wordsIndexList.clear();
-    wordsIndexListAdvanced.clear();
+
+    for (int i = 0; i < 6; i++) {
+        wordsIndexList[i].clear();
+    }
 }
 
 Data::~Data() {
@@ -111,22 +114,17 @@ void Data::save() const {
     settings->setValue("score", score);
     settings->setValue("mode", mode);
     settings->setValue("difficulty", difficulty);
-    settings->setValue("curIndex", curIndex);
-    settings->setValue("curIndexAdvanced", curIndexAdvanced);
 
-    QVariantList varList;
-    for (const int wordIndex : wordsIndexList) {
-        varList.append(wordIndex);
+    for (int i = 0; i < 6; i++) {
+        settings->setValue(QString("curIndex%1").arg(i), curIndex[i]);
+
+        QVariantList varList;
+        for (const int wordIndex : wordsIndexList[i]) {
+            varList.append(wordIndex);
+        }
+
+        settings->setValue(QString("wordsIndexList%1").arg(i), varList);
     }
-
-    settings->setValue("wordsIndexList", varList);
-
-    varList.clear();
-    for (const int wordIndex : wordsIndexListAdvanced) {
-        varList.append(wordIndex);
-    }
-
-    settings->setValue("wordsIndexListAdvanced", varList);
 }
 
 // 加载数据
@@ -141,19 +139,14 @@ void Data::load() {
     mode = settings->value("mode", 1).toInt();
     difficulty = settings->value("difficulty", 1).toInt();
 
-    curIndex = settings->value("curIndex", -1).toInt();
-    curIndexAdvanced = settings->value("curIndexAdvanced", -1).toInt();
+    for (int i = 0; i < 6; i++) {
+        curIndex[i] = settings->value(QString("curIndex%1").arg(i), -1).toInt();
 
-    QVariantList varList = settings->value("wordsIndexList").toList();
-    wordsIndexList.clear();
-    for (const QVariant &var : varList) {
-        wordsIndexList.append(var.toInt());
-    }
-
-    varList = settings->value("wordsIndexListAdvanced", varList).toList();
-    wordsIndexListAdvanced.clear();
-    for (const QVariant &var : varList) {
-        wordsIndexListAdvanced.append(var.toInt());
+        QVariantList varList = settings->value(QString("wordsIndexList%1").arg(i)).toList();
+        wordsIndexList[i].clear();
+        for (const QVariant &var : varList) {
+            wordsIndexList[i].append(var.toInt());
+        }
     }
 
     // 一致性检查
@@ -163,10 +156,10 @@ void Data::load() {
 }
 
 void Data::resetShuffleFlag() {
-    curIndex = -1;
-    curIndexAdvanced = -1;
-    wordsIndexList.clear();
-    wordsIndexListAdvanced.clear();
+    for (int i = 0; i < 6; i++) {
+        curIndex[i] = -1;
+        wordsIndexList[i].clear();
+    }
 
     save();
 }

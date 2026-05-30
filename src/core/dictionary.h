@@ -30,7 +30,7 @@ public:
 
     void loadFromJson(const QString &path = dictPath);
 
-    const Dictionary &getDictByMode(const int &difficulty);
+    const Dictionary &getDictByDifficulty(const int &difficulty);
 
     QString getDictName() const;
 

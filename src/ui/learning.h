@@ -43,10 +43,8 @@ private:
     QLabel *progressLabel;
     QPushButton *returnBtn;
 
-    // int curIndex;
     QString curWord;
     QString curMeaning;
-    // QList<int> wordsIndexList;
     QList<QString> wordsList;
     QList<QString> meaningsList;
     QList<QString> optsList;

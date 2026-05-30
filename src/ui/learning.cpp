@@ -87,7 +87,7 @@ LearningWidget::LearningWidget(QWidget *parent)
 
 void LearningWidget::onOptionClicked() {
     // 根据模式使用词典
-    const Dictionary &dict = DictionaryManager::getInstance().getDictByMode(data.difficulty);
+    const Dictionary &dict = DictionaryManager::getInstance().getDictByDifficulty(data.difficulty);
 
     // 动态根据按钮的文字判断答案是否正确
     const QPushButton *btn = qobject_cast<QPushButton *>(sender());
@@ -98,12 +98,15 @@ void LearningWidget::onOptionClicked() {
         data.addScore(data.difficulty);
 
         // 更新 curIndex
-        data.curIndex++;
+        const int d = data.difficulty - 1;
+        data.curIndex[d]++;
 
         // 如果单词遍历结束，则下次遍历时重新初始化
-        if (data.curIndex >= dict.size()) {
-            data.curIndex = -1;
+        if (data.curIndex[d] >= dict.size()) {
+            data.curIndex[d] = -1;
         }
+
+        data.save();
 
         updateWords();
         updateRendering();
@@ -138,7 +141,7 @@ void LearningWidget::onOptionClicked() {
 
 void LearningWidget::updateWords() {
     // 根据模式使用词典
-    const Dictionary &dict = DictionaryManager::getInstance().getDictByMode(data.difficulty);
+    const Dictionary &dict = DictionaryManager::getInstance().getDictByDifficulty(data.difficulty);
 
     // 更新私有变量
     optsList.clear();
@@ -155,8 +158,10 @@ void LearningWidget::updateWords() {
 
     tryShuffle();
 
-    curWord = wordsList[data.wordsIndexList[data.curIndex]];
-    curMeaning = meaningsList[data.wordsIndexList[data.curIndex]];
+    const int d = data.difficulty - 1;
+
+    curWord = wordsList[data.wordsIndexList[d][data.curIndex[d]]];
+    curMeaning = meaningsList[data.wordsIndexList[d][data.curIndex[d]]];
 
     optsList.append(curMeaning);
 
@@ -176,36 +181,40 @@ void LearningWidget::updateWords() {
 
 void LearningWidget::tryShuffle() const {
     // 根据模式使用词典
-    const Dictionary &dict = DictionaryManager::getInstance().getDictByMode(data.difficulty);
+    const Dictionary &dict = DictionaryManager::getInstance().getDictByDifficulty(data.difficulty);
+
+    const int d = data.difficulty - 1;
 
     // 将正确单词索引列表随机打乱，确保每一个单词都有出现的机会
     // curIndex 初始值为 -1，若为 -1 则重新打乱 wordsIndexList
     // 这里不选择直接打乱 wordsList 是因为混合模式下字典是随机的，但两个字典的长度一致
-    if (data.curIndex == -1) {
+    if (data.curIndex[d] == -1) {
         // 初始化 wordsIndexList
-        data.wordsIndexList.clear();
+        data.wordsIndexList[d].clear();
 
         for (int i = 0; i < dict.size(); i++) {
-            data.wordsIndexList.append(i);
+            data.wordsIndexList[d].append(i);
         }
 
         // 使用标准库的 shuffle 函数进行打乱
         // 使用 Qt 内置的 QRandomGenerator 实现随机数生成
-        std::shuffle(data.wordsIndexList.begin(), data.wordsIndexList.end(), *QRandomGenerator::global());
+        std::shuffle(data.wordsIndexList[d].begin(), data.wordsIndexList[d].end(), *QRandomGenerator::global());
 
         // 打乱结束令 curIndex = 0，从第一个单词开始遍历
-        data.curIndex = 0;
+        data.curIndex[d] = 0;
     }
 }
 
 void LearningWidget::updateRendering() const {
-    const Dictionary &dict = DictionaryManager::getInstance().getDictByMode(data.difficulty);
+    const Dictionary &dict = DictionaryManager::getInstance().getDictByDifficulty(data.difficulty);
+
+    const int d = data.difficulty - 1;
 
     // 更新渲染
     scoreLabel->setText(QString("Exp: %1 / %2").arg(data.score).arg(data.getExpForNextLevel()));
     levelLabel->setText(QString("等级: %1").arg(data.level));
     titleLabel->setText(curWord);
-    progressLabel->setText(QString("进度: %1 / %2").arg(data.curIndex + 1).arg(dict.size()));
+    progressLabel->setText(QString("进度: %1 / %2").arg(data.curIndex[d] + 1).arg(dict.size()));
 
     optBtn1->setText(optsList[0]);
     optBtn2->setText(optsList[1]);

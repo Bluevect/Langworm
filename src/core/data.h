@@ -7,11 +7,12 @@
 class Data {
 public:
     // 删除拷贝构造和赋值操作
-    Data(const Data&) = delete;
-    Data& operator=(const Data&) = delete;
+    Data(const Data &) = delete;
+
+    Data &operator=(const Data &) = delete;
 
     // 静态获取实例的接口
-    static Data& getInstance();
+    static Data &getInstance();
 
     static const QString dataPath;
 
@@ -20,10 +21,9 @@ public:
     int score;
     int mode;
     int difficulty;
-    int curIndex;
-    QList<int> wordsIndexList;
-    int curIndexAdvanced;
-    QList<int> wordsIndexListAdvanced;
+
+    int curIndex[6];
+    QList<int> wordsIndexList[6];
 
     void addScore(const int &scoreToAdd = 1);
 
@@ -46,6 +46,7 @@ public:
 private:
     // 私有化构造函数
     Data();
+
     ~Data();
 
     QSettings *settings;

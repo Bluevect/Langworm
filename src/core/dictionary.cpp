@@ -120,7 +120,7 @@ void DictionaryManager::loadFromJson(const QString &path) {
     }
 }
 
-const Dictionary &DictionaryManager::getDictByMode(const int &difficulty) {
+const Dictionary &DictionaryManager::getDictByDifficulty(const int &difficulty) {
     switch (difficulty) {
         case 1:
         case 4:
