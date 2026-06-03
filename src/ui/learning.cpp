@@ -188,7 +188,7 @@ void LearningWidget::tryShuffle() const {
     // 将正确单词索引列表随机打乱，确保每一个单词都有出现的机会
     // curIndex 初始值为 -1，若为 -1 则重新打乱 wordsIndexList
     // 这里不选择直接打乱 wordsList 是因为混合模式下字典是随机的，但两个字典的长度一致
-    if (data.curIndex[d] == -1) {
+    if (data.curIndex[d] == -1 || data.wordsIndexList[d].isEmpty()) {
         // 初始化 wordsIndexList
         data.wordsIndexList[d].clear();
 

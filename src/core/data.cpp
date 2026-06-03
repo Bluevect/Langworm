@@ -15,11 +15,15 @@ Data &Data::getInstance() {
     return instance;
 }
 
-Data::Data() : level(1), lastLevel(1), score(0), mode(1), difficulty(1), curIndex{-1} {
+Data::Data() : level(1), lastLevel(1), score(0), mode(1), difficulty(1) {
     settings = new QSettings(dataPath, QSettings::IniFormat);
 
     for (int i = 0; i < 6; i++) {
         wordsIndexList[i].clear();
+    }
+
+    for (int i = 0; i < 6; i++) {
+        curIndex[i] = -1;
     }
 }
 
